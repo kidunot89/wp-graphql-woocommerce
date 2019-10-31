@@ -39,6 +39,7 @@ class Type_Registry {
 		\WPGraphQL\WooCommerce\Type\WPEnum\Products_Orderby_Enum::register();
 		\WPGraphQL\WooCommerce\Type\WPEnum\Orders_Orderby_Enum::register();
 		\WPGraphQL\WooCommerce\Type\WPEnum\Id_Type_Enums::register();
+		\WPGraphQL\WooCommerce\Type\WPEnum\Payment_Token_Type_Enum::register();
 
 		// InputObjects.
 		\WPGraphQL\WooCommerce\Type\WPInputObject\Customer_Address_Input::register();
@@ -53,6 +54,7 @@ class Type_Registry {
 		\WPGraphQL\WooCommerce\Type\WPInputObject\Product_Taxonomy_Filter_Input::register();
 		\WPGraphQL\WooCommerce\Type\WPInputObject\Product_Taxonomy_Filter_Relation_Input::register();
 		\WPGraphQL\WooCommerce\Type\WPInputObject\Orderby_Inputs::register();
+		\WPGraphQL\WooCommerce\Type\WPInputObject\Payment_Token_Input::register();
 
 		// Interfaces.
 		\WPGraphQL\WooCommerce\Type\WPInterface\Product::register_interface( $type_registry );
@@ -117,5 +119,6 @@ class Type_Registry {
 		\WPGraphQL\WooCommerce\Mutation\Order_Delete::register_mutation();
 		\WPGraphQL\WooCommerce\Mutation\Order_Delete_Items::register_mutation();
 		\WPGraphQL\WooCommerce\Mutation\Checkout::register_mutation();
+		\WPGraphQL\WooCommerce\Mutation\Process_Payment::register_mutation();
 	}
 }

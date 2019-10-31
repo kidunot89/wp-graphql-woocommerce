@@ -438,28 +438,6 @@ class Checkout_Mutation {
 	}
 
 	/**
-	 * Process an order that does require payment.
-	 *
-	 * @param int    $order_id       Order ID.
-	 * @param string $payment_method Payment method.
-	 *
-	 * @return array.
-	 */
-	protected function process_order_payment( $order_id, $payment_method ) {
-		$available_gateways = WC()->payment_gateways->get_available_payment_gateways();
-
-		if ( ! isset( $available_gateways[ $payment_method ] ) ) {
-			return;
-		}
-
-		// Store Order ID in session so it can be re-used after payment failure.
-		WC()->session->set( 'order_awaiting_payment', $order_id );
-
-		// Process Payment.
-		return $available_gateways[ $payment_method ]->process_payment( $order_id );
-	}
-
-	/**
 	 * Process an order that doesn't require payment.
 	 *
 	 * @since 3.0.0
@@ -523,7 +501,7 @@ class Checkout_Mutation {
 		do_action( 'woocommerce_checkout_order_processed', $order_id, $data, $order );
 
 		if ( WC()->cart->needs_payment() && ( empty( $input['isPaid'] ) || false === $input['isPaid'] ) ) {
-			$results = self::process_order_payment( $order_id, $data['payment_method'] );
+			$results = Payment_Mutation::process_order_payment( $order_id, $data['payment_method'] );
 		} else {
 			$transaction_id = ! empty( $input['transactionId'] ) ? $input['transactionId'] : '';
 
