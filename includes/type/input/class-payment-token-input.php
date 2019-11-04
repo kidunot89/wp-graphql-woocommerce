@@ -24,7 +24,7 @@ class Payment_Token_Input {
 					'type'        => array(
 						'type' => array( 'non_null' => 'PaymentTokenTypeEnum' ),
 					),
-					'token_id'    => array(
+					'tokenId'     => array(
 						'type' => array( 'non_null' => 'String' ),
 					),
 					'last4'       => array(

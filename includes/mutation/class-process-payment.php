@@ -50,8 +50,12 @@ class Process_Payment {
 				'type'        => array( 'non_null' => 'String' ),
 				'description' => __( 'ID/slug of payment method being used.', 'wp-graphql-woocommerce' ),
 			),
+			'tokenId'       => array(
+				'type'        => 'Int',
+				'description' => __( 'ID for existing user payment method token', 'wp-graphql-woocommerce' ),
+			),
 			'newToken'      => array(
-				'type'        => 'PaymentToken',
+				'type'        => 'PaymentTokenInput',
 				'description' => __( 'The payment token being used to pay for the order', 'wp-graphql-woocommerce' ),
 			),
 		);
@@ -111,18 +115,24 @@ class Process_Payment {
 				throw new UserError( __( 'This payment method doesn\'t support tokenization.', 'wp-graphql-woocommerce' ) );
 			}
 
-			if ( ! empty( $input['paymentToken'] ) ) {
-				$token = PaymentMutation::add_new_payment_token( $payment_gateway_id, $input['paymentToken'] );
-				if ( ! $token ) {
+			if ( empty( $input['tokenId'] ) && empty( $input['newToken'] ) ) {
+				throw new UserError( __( 'A WooCommerce token ID or new token information must be provided.', 'wp-graphql-woocommerce' ) );
+			}
+
+			if ( ! empty( $input['newToken'] ) ) {
+				$new_token = Payment_Mutation::add_new_payment_token( $payment_gateway_id, $input['newToken'] );
+				if ( ! $new_token ) {
 					throw new UserError( __( 'Payment token invalid, Please check input and try again.', 'wp-graphql-woocommerce' ) );
 				}
 				$results = Payment_Mutation::process_order_payment_with_token(
 					$order->ID,
-					$input['payment_method'],
-					$token
+					$payment_gateway_id,
+					$new_token->get_token()
 				);
-			} else {
-				$results = Payment_Mutation::process_order_payment( $order->ID, $input['payment_method'] );
+			}
+
+			if ( ! empty( $input['tokenId'] ) ) {
+				$results = Payment_Mutation::process_order_payment( $order->ID, $payment_gateway_id, $input['tokenId'] );
 			}
 
 			return array_merge( $results, array( 'order_id' => $order->ID ) );

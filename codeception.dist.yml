@@ -73,13 +73,23 @@ modules:
             domain: '%WP_DOMAIN%'
             adminEmail: '%ADMIN_EMAIL%'
             title: 'Test'        
+<<<<<<< HEAD
             plugins:
                 - woocommerce/woocommerce.php
+=======
+            plugins: 
+                - woocommerce/woocommerce.php
+                - woocommerce-gateway-stripe/woocommerce-gateway-stripe.php
+>>>>>>> "processPayment" mutation updated.
                 - wp-graphql/wp-graphql.php
                 - wp-graphql-jwt-authentication/wp-graphql-jwt-authentication.php
                 - wp-graphql-woocommerce/wp-graphql-woocommerce.php
             activatePlugins:
                 - woocommerce/woocommerce.php
+<<<<<<< HEAD
+=======
+                - woocommerce-gateway-stripe/woocommerce-gateway-stripe.php
+>>>>>>> "processPayment" mutation updated.
                 - wp-graphql/wp-graphql.php
                 - wp-graphql-jwt-authentication/wp-graphql-jwt-authentication.php
                 - wp-graphql-woocommerce/wp-graphql-woocommerce.php
