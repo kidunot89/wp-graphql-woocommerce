@@ -58,7 +58,9 @@ jobs:
       - name: Setup PHP
         if: matrix.phpcs == 1
         uses: shivammathur/setup-php@v1
-        php-version: ${{ matrix.php }}
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer
 
       - name: Get Composer Cache Directory
         if: matrix.phpcs == 1
