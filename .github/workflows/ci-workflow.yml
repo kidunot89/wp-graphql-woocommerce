@@ -10,7 +10,7 @@ on:
       - develop
 
 jobs:
-  testing:
+  run:
     runs-on: ubuntu-latest
     env:
       coverage: 0
@@ -34,6 +34,7 @@ jobs:
 
           - php: '7.2'
             wordpress: '4.9'
+    name: WordPress ${{ matrix.wordpress }} on PHP ${{ matrix.php }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1
