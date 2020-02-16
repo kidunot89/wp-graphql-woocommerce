@@ -1,0 +1,98 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - develop
+      - master
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        coverage: 0
+        debug: 0
+        php: [7.3, 7.2, 7.1, 7.0, 5.6]
+        wordpress: [5.3, 5.0, 4.9]
+        include: 
+          - php: 5.6
+            wordpress: 5.3
+            phpcs: 1
+        include:
+          - php: 7.0
+            wordpress: 5.0
+            coverage: 1
+        exclude: 
+          - php: 7.3
+            wordpress: 4.9
+        exclude: 
+          - php: 7.2
+            wordpress: 4.9
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v1
+          
+        - name: Docker-Compose Up
+          if: matrix.phpcs != 1
+          run: |
+            docker-compose build \
+            --build-arg DESIRED_PHP_VERSION=${{ matrix.php }} \
+            --build-arg DESIRED_WP_VERSION=${{ matrix.wordpress }} \
+            --build-arg USE_XDEBUG=${{ matrix.xdebug }} \
+            testing
+
+        - name: Run Tests with Docker
+          if: matrix.phpcs != 1
+          run: |
+            docker-compose run --rm \
+            -e COVERAGE=${matrix.coverage:-0} \
+            -e DEBUG=${matrix.debug:-0} \
+            testing --scale app=0
+
+        - name: Setup PHP
+          if: matrix.phpcs == 1
+          uses: shivammathur/setup-php@v1
+          php-version: ${{ matrix.php }}
+
+        - name: Get Composer Cache Directory
+          if: matrix.phpcs == 1
+          id: composer-cache
+          run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+        - name: Cache dependencies
+          if: matrix.phpcs == 1
+          uses: actions/cache@v1
+          with:
+            path: ${{ steps.composer-cache.outputs.dir }}
+            key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+            restore-keys: ${{ runner.os }}-composer
+
+        - name: Install dependencies
+          if: matrix.phpcs == 1
+          run: |
+            composer require \
+            squizlabs/php_codesniffer \
+            phpcompatibility/phpcompatibility-wp wp-coding-standards/wpcs \
+            dealerdirect/phpcodesniffer-composer-installer
+            composer install --no-dev
+
+        - name: Run PHP CodeSniffer
+          if: matrix.phpcs == 1
+          run: |
+            vendor/bin/phpcs \
+            wp-graphql-woocommerce.php \
+            access-functions.php \
+            class-inflect.php \
+            includes/*.php --standard=WordPress
+        
+        - name: Push Codecoverage to Coveralls.io
+          if: matrix.coverage == 1
+          run: |
+            wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.1.0/php-coveralls.phar
+            chmod +x php-coveralls.phar
+      
+            php php-coveralls.phar -v
