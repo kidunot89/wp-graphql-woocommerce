@@ -42,8 +42,8 @@ jobs:
       - name: Build Docker Images and run tests
         if: matrix.phpcs != 1
         run: |
-          export DESIRED_PHP_VERSION=${{ matrix.php }}
-          export DESIRED_WP_VERSION=${{ matrix.wordpress }}
+          export PHP_VERSION=${{ matrix.php }}
+          export WP_VERSION=${{ matrix.wordpress }}
           docker-compose run --rm -d \
           -e COVERAGE=${{ matrix.coverage }} \
           -e DEBUG=${{ matrix.debug }} \
@@ -58,6 +58,7 @@ jobs:
         uses: shivammathur/setup-php@v1
         with:
           php-version: ${{ matrix.php }}
+          extensions: mbstring, intl
           tools: composer
 
       - name: Get Composer Cache Directory
