@@ -42,8 +42,8 @@ jobs:
       - name: Build Docker Images and run tests
         if: matrix.phpcs != 1
         run: |
-          export PHP_VERSION=${{ matrix.php }}
-          export WP_VERSION=${{ matrix.wordpress }}
+          export DESIRED_PHP_VERSION=${{ matrix.php }}
+          export DESIRED_WP_VERSION=${{ matrix.wordpress }}
           docker-compose run --rm -d \
           -e COVERAGE=${{ matrix.coverage }} \
           -e DEBUG=${{ matrix.debug }} \
