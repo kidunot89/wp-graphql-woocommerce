@@ -17,23 +17,23 @@ jobs:
       debug: 0
     strategy:
       matrix:
-        php: [7.3, 7.2, 7.1, 7.0, 5.6]
-        wordpress: [5.3, 5.0, 4.9]
+        php: ['7.3', '7.2', '7.1', '7.0', '5.6']
+        wordpress: ['5.3', '5.0', '4.9']
         include: 
-          - php: 5.6
-            wordpress: 5.3
+          - php: '5.6'
+            wordpress: '5.3'
             phpcs: 1
 
-          - php: 7.0
-            wordpress: 5.0
+          - php: '7.0'
+            wordpress: '5.0'
             coverage: 1
 
         exclude: 
-          - php: 7.3
-            wordpress: 4.9
+          - php: '7.3'
+            wordpress: '4.9'
 
-          - php: 7.2
-            wordpress: 4.9
+          - php: '7.2'
+            wordpress: '4.9'
     steps:
       - name: Checkout
         uses: actions/checkout@v1
