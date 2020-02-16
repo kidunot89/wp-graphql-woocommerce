@@ -23,14 +23,15 @@ jobs:
           - php: 5.6
             wordpress: 5.3
             phpcs: 1
-        include:
+
           - php: 7.0
             wordpress: 5.0
             coverage: 1
+
         exclude: 
           - php: 7.3
             wordpress: 4.9
-        exclude: 
+
           - php: 7.2
             wordpress: 4.9
     steps:
