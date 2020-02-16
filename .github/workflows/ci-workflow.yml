@@ -42,7 +42,7 @@ jobs:
         if: matrix.phpcs != 1
         run: |
           PHP_VERSION=${{ matrix.php }} \
-          WP_VERSION=${{ matrix.wordpress } \
+          WP_VERSION=${{ matrix.wordpress }} \
           docker-compose run --rm -d \
           -e COVERAGE=${matrix.coverage:-0} \
           -e DEBUG=${matrix.debug:-0} \
