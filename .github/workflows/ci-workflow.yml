@@ -12,10 +12,11 @@ on:
 jobs:
   testing:
     runs-on: ubuntu-latest
+    env:
+      coverage: 0
+      debug: 0
     strategy:
       matrix:
-        coverage: 0
-        debug: 0
         php: [7.3, 7.2, 7.1, 7.0, 5.6]
         wordpress: [5.3, 5.0, 4.9]
         include: 
