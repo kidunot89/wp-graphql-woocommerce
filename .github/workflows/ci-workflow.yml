@@ -39,15 +39,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      - name: Build Docker Images and run tests
+      - name: Build Docker Network
+        if: matrix.phpcs !=1
+        run: docker-compose build --build-arg DESIRED_PHP_VERSION=${{ matrix.php }} --build-arg DESIRED_WP_VERSION=${{ matrix.wordpress }} testing
+
+      - name: Run tests
         if: matrix.phpcs != 1
-        run: |
-          export PHP_VERSION=${{ matrix.php }}
-          export WP_VERSION=${{ matrix.wordpress }}
-          docker-compose run --rm -d \
-          -e COVERAGE=${{ matrix.coverage }} \
-          -e DEBUG=${{ matrix.debug }} \
-          testing --scale app=0
+        run: docker-compose run --rm -d -e COVERAGE=${{ matrix.coverage }} -e DEBUG=${{ matrix.debug }} testing --scale app=0
 
       - name: "Print Docker Logs"
         if: matrix.phpcs != 1
