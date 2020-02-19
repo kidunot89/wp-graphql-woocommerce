@@ -259,7 +259,7 @@ class CheckoutMutationsTest extends \Codeception\TestCase\WPTestCase {
     }
 
     // tests
-    public function testCheckoutOrderMutation() {
+    public function testCheckoutMutation() {
 		wp_set_current_user( $this->simple_customer );
         $variable  = $this->variation->create( $this->product->create_variable() );
         $product_ids = array(
@@ -466,7 +466,7 @@ class CheckoutMutationsTest extends \Codeception\TestCase\WPTestCase {
         $this->assertEquals( $expected, $actual );
     }
 
-    public function testCheckoutOrderMutationWithNewAccount() {
+    public function testCheckoutMutationWithNewAccount() {
         $variable  = $this->variation->create( $this->product->create_variable() );
         $product_ids = array(
             $this->product->create_simple(),
@@ -657,7 +657,7 @@ class CheckoutMutationsTest extends \Codeception\TestCase\WPTestCase {
         $this->assertEquals( $expected, $actual );
     }
 
-    public function testCheckoutOrderMutationWithNoAccount() {
+    public function testCheckoutMutationWithNoAccount() {
         update_option( 'woocommerce_enable_guest_checkout', 'yes' );
         $variable  = $this->variation->create( $this->product->create_variable() );
         $product_ids = array(
@@ -852,7 +852,7 @@ class CheckoutMutationsTest extends \Codeception\TestCase\WPTestCase {
         $this->assertEquals( $expected, $actual );
     }
 
-    public function testCheckoutOrderMutationWithPrepaidOrder() {
+    public function testCheckoutMutationWithPrepaidOrder() {
         update_option( 'woocommerce_enable_guest_checkout', 'yes' );
         $product_ids = array(
             $this->product->create_simple(

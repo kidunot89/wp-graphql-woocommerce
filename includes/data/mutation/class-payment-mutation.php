@@ -127,28 +127,36 @@ class Payment_Mutation {
 	 *
 	 * @return array
 	 */
-	public static function process_order_payment( $order_id, $payment_method, $token_id ) {
+	public static function process_order_payment( $order_id, $payment_method, $token_id = null ) {
 		$gateway = self::validate_gateway( $payment_method );
 
-		// Validate token.
-		$token = \WC_Payment_Tokens::get( $token_id );
-		if ( $token->get_user_id() !== get_current_user_id() ) {
-			throw new UserError(
-				__(
-					'Please make sure your card details have been entered correctly and that your browser supports JavaScript.',
-					'wp-graphql-woocommerce'
-				)
-			);
-		}
+		// Validate and process payment token.
+		if ( ! empty( $token_id ) ) {
+			$token = \WC_Payment_Tokens::get( $token_id );
+			if ( $token->get_user_id() !== get_current_user_id() ) {
+				throw new UserError(
+					__(
+						'Please make sure your card details have been entered correctly and that your browser supports JavaScript.',
+						'wp-graphql-woocommerce'
+					)
+				);
+			}
 
-		$wc_token_key           = "wc-{$payment_method}-payment-token";
-		$_POST[ $wc_token_key ] = $token->get_id();
+			$wc_token_key           = "wc-{$payment_method}-payment-token";
+			$_POST[ $wc_token_key ] = $token->get_id();
+		}
 
 		// Store Order ID in session so it can be re-used after payment failure.
 		WC()->session->set( 'order_awaiting_payment', $order_id );
 
 		// Process Payment.
-		return $gateway->process_payment( $order_id );
+		return wp_parse_args(
+			$gateway->process_payment( $order_id ),
+			array(
+				'message' => '',
+				'status'  => 'INCOMPLETED',
+			)
+		);
 	}
 
 	/**
@@ -168,6 +176,12 @@ class Payment_Mutation {
 		WC()->session->set( 'order_awaiting_payment', $order_id );
 
 		// Process Payment.
-		return $gateway->process_payment( $order_id );
+		return wp_parse_args(
+			$gateway->process_payment( $order_id ),
+			array(
+				'message' => '',
+				'status'  => 'INCOMPLETED',
+			)
+		);
 	}
 }

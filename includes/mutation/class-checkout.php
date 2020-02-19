@@ -79,6 +79,14 @@ class Checkout {
 				'type'        => array( 'list_of' => 'MetaDataInput' ),
 				'description' => __( 'Order meta data', 'wp-graphql-woocommerce' ),
 			),
+			'tokenId'                => array(
+				'type'        => 'Int',
+				'description' => __( 'ID for existing user payment method token', 'wp-graphql-woocommerce' ),
+			),
+			'newToken'               => array(
+				'type'        => 'PaymentTokenInput',
+				'description' => __( 'The payment token being used to pay for the order', 'wp-graphql-woocommerce' ),
+			),
 		);
 	}
 

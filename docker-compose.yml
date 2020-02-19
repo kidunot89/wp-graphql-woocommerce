@@ -16,6 +16,7 @@ services:
       DB_HOST: app_db
       INCLUDE_WPGRAPHIQL: 1
       IMPORT_WC_PRODUCTS: 1
+      STRIPE_GATEWAY: 1
     ports:
       - '8091:80'
     networks:
